@@ -1,0 +1,62 @@
+<table id="userDataGrid" class="easyui-datagrid"></table>
+
+<!-- 查询操作 -->
+<div id="user_search">
+	<div class="wu-toolbar-button">
+		<label style="margin-left:2opx";>昵称:</label>
+		<input type="text" class="wu-text" style="width:140px" name="question" id="user_search_uname" />
+		<label style="margin-left:2opx";>联系方式:</label>
+		<input type="text" class="wu-text" style="width:140px" name="question" id="user_search_tel" />
+		<a href="javascript:searchUser()" class="easyui-linkbutton" iconCls="icon-search">开始检索</a>
+	</div>
+</div>
+
+<script>
+$(function(){
+	$('#userDataGrid').datagrid({   
+	    url:'../../findAdminByPage',   //调用的数据源
+	    queryParams:{op:"findByPage"},
+	    fitColumns:true,
+	    striped:true,
+	    singleSelect:true,
+	    pagination:true,
+	    rownumbers:true,  
+	    pageSize:10,
+	    fit:true,
+	    sortName:'usid',
+	    remoteSort:false,
+	    columns:[[ 
+	        {checkbox:true},
+	        {field:'photo',title:'图像',width:50,align:'center',
+	        	formatter:function(val,row,index){
+	        		if(val==undefined){
+	        			return "<img src='../../images/zanwu.jpg' width:'50px' height='50px' />";
+	        		}else{
+	        			return "<img src='../../"+val+"' width:'50px' height='50px' />";
+	        		}
+	        	}	
+	        },
+			{field:'usid',title:'会员编号',width:100,align:'center',sortable:true},
+			{field:'uname',title:'昵称',width:100,align:'center'},
+			{field:'email',title:'邮箱',width:100,align:'center'},
+			{field:'tel',title:'联系方式',width:100,align:'center'},
+			{field:'udate',title:'注册时间',width:100,align:'center'},
+			{field:'score',title:'积分',width:50,align:'center'},
+			{field:'balance',title:'余额',width:50,align:'center'},
+			{field:'addr',title:'地址',width:50,align:'center'},
+			{field:'_operate',title:'操作',width:50,align:'center',
+	        	formatter: function(val,row,index){
+					if(row.ustatus==1){
+						return "<a class='navy-icon-delete' href='javascript:changeStatus("+row.usid+",2)'>冻结</a>";
+					}else if(row.ustatus==2){
+						return "<a class='navy-icon-earth' href='javascript:changeStatus("+row.usid+",1)'>解冻</a>";
+					}else if(row.ustatus==3){
+						return "已注销";
+					}
+				}
+	        }
+	    ]],
+	    toolbar:"#user_search"
+	});
+});
+</script>

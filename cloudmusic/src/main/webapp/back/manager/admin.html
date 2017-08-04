@@ -1,0 +1,182 @@
+<table id="admin_data" data-options="fit:true"></table>
+
+<div id="admin_search">
+	<a href="javascript:admin_add_show()" class="easyui-linkbutton"  data-options="iconCls:'icon-add',plain:true" style="float:left">添加</a>
+	<div class="datagrid-btn-separator"></div>
+	<a href="javascript:admin_update_show()" class="easyui-linkbutton"  data-options="iconCls:'icon-edit',plain:true" style="float:left">修改</a>
+	<div class="datagrid-btn-separator"></div>
+	<a href="javascript:admin_delete()" class="easyui-linkbutton"  data-options="iconCls:'icon-remove',plain:true" style="float:left">删除</a>
+	<div class="datagrid-btn-separator"></div>
+	<label style="margin-left:20px;">姓名:</label>
+	<input type="text" class="wu-text" style="width:200px" name="scardId" id="admin_search_aname" />
+	<a href="javascript:admin_searchInfo()" class="easyui-linkbutton"  data-options="iconCls:'icon-search'">开始检索</a>
+</div>
+
+<div id="admin_update" class="easyui-dialog" data-options="closed:true">
+	<form id="admin_update_form" method="post" style="padding:10px;">
+		<ul>
+			<li>
+	        	<label>管理员姓名:</label>
+	            <input type="text" name="aname" id="admin_update_aname" class="wu-text" style="width:200px;"/>
+	        </li>
+			<li>
+	        	<label>管理员密码:</label>
+	            <input type="text" name="pwd" id="admin_update_pwd" class="wu-text" style="width:200px;"/>
+	        </li>
+		</ul>
+	</form>
+</div>
+
+<style>
+li{
+	list-style-type:none;
+	margin:10px 0px 0px 20px;
+}
+</style>
+
+<script type="text/javascript">
+	var adminEditRow=undefined;
+	var adminOp;
+	var adminFlag;
+	
+	var adminObj=$("#admin_data").datagrid({
+		url:'../../findAdminByPage', //调用的数据源
+		rownumbers:true,	   //设置为 true，则显示带有行号的列。
+		pagination:true,	   //在数据网格（datagrid）底部显示分页工具栏。
+		striped:true,		   //即奇偶行使用不同背景色
+		fitColumns:true,	   //列自适应
+		pageSize:10,
+		pageList:[10,20,30,40,50],
+		fit:true, 				//datagrid自适应高度
+		sortName:"aid",
+		remoteSort:false,
+		columns:[[
+			{ checkbox:true},
+			{ field:'aid',title:'管理员编号',width:100,align:"center",sortable:true},
+			{ field:'aname',title:'管理员姓名',width:100,align:"center"},
+			{ field:'pwd',title:'管理员密码',width:200,align:"center"}
+		]],
+		toolbar:"#admin_search"
+	});
+	
+	function admin_add_show(){
+		$("#admin_update").dialog({
+			closed:false,
+			modal:false,
+			title:"添加管理员",
+			width:430,
+			height:300,
+			buttons:[{
+				text:'确定',
+				iconCls:'icon-ok',
+				handler:function(){
+					var aname=$.trim($("#admin_update_aname").val());
+					var pwd=$.trim($("#admin_update_pwd").val());
+					
+					if(aname=="" || pwd==""){
+						return;
+					}
+					
+					$.post("../../addAdmin",{aname:aname,pwd:pwd},function(data){
+						data=parseInt(data);
+						if(data==1){
+							adminObj.datagrid("reload");
+							$("#admin_update_showpic").html("");
+							$("#admin_update_form")[0].reset();
+							$.messager.show({title:"成功提示",msg:"管理员信息添加成功...",timeout:2000,showType:"slide"});
+						}else{
+							$.messager.alert("失败提示","添加管理员信息失败...","error");
+						}
+					},"text");
+				}
+			},{
+				text:'取消',
+				iconCls:'icon-cancel',
+				handler:function(){
+					$("#admin_update_showpic").html("");
+					$("#admin_update_form")[0].reset();
+					$("#admin_update").dialog('close');
+				}
+			}]
+		});
+	}
+	
+	function admin_delete(){
+		var rows=adminObj.datagrid("getChecked");
+		if(rows.length<0){
+			$.messager.show({title:"温馨提示",msg:"请选择您要删除的数据...",timeout:2000,showType:"slide"});
+		}else{
+			$.messager.confirm("删除确认","您确定要删除选中的数据吗?",function(rt){
+				if(rt){
+					var aids="";
+					for(var i=0,len=rows.length;i<len-1;i++){
+						aids+=rows[i].aid+",";
+					}
+					aids+=rows[i].aid;
+					
+					$.post("../../deleteAdmin",{aids:aids},function(data){
+						data=parseInt($.trim(data));
+						if(data>0){
+							adminObj.datagrid("reload");
+							$.messager.show({title:"成功提示",msg:"管理员信息删除成功...",timeout:2000,showType:"slide"});
+						}else{
+							$.messager.alert("失败提示","管理员信息删除失败...\n"+e,"error");
+						}
+					},"text");
+				}
+			});
+		}
+	}
+	
+	function admin_update_show(){
+		var rows=adminObj.datagrid("getChecked");
+		if(rows.length<0){
+			$.messager.show({title:"温馨提示",msg:"请选择您要修改的数据...",timeout:2000,showType:"slide"});
+		}else if(rows.length>1){
+			$.messager.show({title:"温馨提示",msg:"只能选择一条数据进行修改...",timeout:2000,showType:"slide"});
+		}else{
+			$("#admin_update_aname").val(rows[0].aname);
+			$("#admin_update_pwd").val(rows[0].pwd);
+			$("#admin_update").dialog({
+				closed:false,
+				modal:false,
+				title:"修改管理员信息",
+				width:430,
+				height:300,
+				buttons:[{
+					text:'确定',
+					iconCls:'icon-ok',
+					handler:function(){
+						var aid=rows[0].aid;
+						var aname=$.trim($("#admin_update_aname").val());
+						var pwd=$.trim($("#admin_update_pwd").val());
+						
+						if(aname=="" || pwd==""){
+							return;
+						}
+						
+						$.post("../../updateAdmin",{aid:aid,aname:aname,pwd:pwd},function(data){
+							data=parseInt(data);
+							if(data==1){
+								adminObj.datagrid("reload");
+								$("#admin_update_showpic").html("");
+								$("#admin_update_form")[0].reset();
+								$.messager.show({title:"成功提示",msg:"管理员信息修改成功...",timeout:2000,showType:"slide"});
+							}else{
+								$.messager.alert("失败提示","修改管理员信息失败...","error");
+							}
+						},"text");
+					}
+				},{
+					text:'取消',
+					iconCls:'icon-cancel',
+					handler:function(){
+						$("#admin_update_showpic").html("");
+						$("#admin_update_form")[0].reset();
+						$("#admin_update").dialog('close');
+					}
+				}]
+			});
+		}
+	}
+</script>
