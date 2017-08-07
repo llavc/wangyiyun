@@ -1,0 +1,33 @@
+ *{
+   	padding: 0px;
+   	margin: 0px auto;
+   }
+   body{
+   	background: #F5F5F5;
+   }
+   .content{
+   	width: 980px;
+   	height: 700px;
+   	background: #FFFFFF;
+   }
+  .pic{
+  	margin-top: 80px;
+  	margin-left: 60px;
+   float: left;
+  }
+  .wd{
+  	margin-top: 180px;
+  	margin-left: 20px;
+  	float: left;
+  }
+  .wd_a{
+  	widows: 250px;
+  	height: 65px;
+    display: block;
+    background: url(../img/images/3.png)no-repeat;
+    margin-left: 0px;
+    margin-top: 30px;
+  }
+ .wd_a:hover{
+ 	background:url(../img/images/4.png)no-repeat;	
+ }

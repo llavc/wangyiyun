@@ -14,7 +14,7 @@
 <script>
 $(function(){
 	$('#userDataGrid').datagrid({   
-	    url:'../../findAdminByPage',   //调用的数据源
+	    url:'../../findUserInfoByPage',   //调用的数据源
 	    queryParams:{op:"findByPage"},
 	    fitColumns:true,
 	    striped:true,
@@ -36,23 +36,16 @@ $(function(){
 	        		}
 	        	}	
 	        },
-			{field:'usid',title:'会员编号',width:100,align:'center',sortable:true},
+			{field:'usid',title:'用户编号',width:100,align:'center',sortable:true},
 			{field:'uname',title:'昵称',width:100,align:'center'},
-			{field:'email',title:'邮箱',width:100,align:'center'},
+			{field:'sex',title:'性别',width:100,align:'center'},
 			{field:'tel',title:'联系方式',width:100,align:'center'},
-			{field:'udate',title:'注册时间',width:100,align:'center'},
-			{field:'score',title:'积分',width:50,align:'center'},
-			{field:'balance',title:'余额',width:50,align:'center'},
+			{field:'email',title:'邮箱',width:100,align:'center'},
+			{field:'bir',title:'生日',width:100,align:'center'},
 			{field:'addr',title:'地址',width:50,align:'center'},
 			{field:'_operate',title:'操作',width:50,align:'center',
 	        	formatter: function(val,row,index){
-					if(row.ustatus==1){
-						return "<a class='navy-icon-delete' href='javascript:changeStatus("+row.usid+",2)'>冻结</a>";
-					}else if(row.ustatus==2){
-						return "<a class='navy-icon-earth' href='javascript:changeStatus("+row.usid+",1)'>解冻</a>";
-					}else if(row.ustatus==3){
-						return "已注销";
-					}
+					return "<a class='navy-icon-delete' href='javascript:delUserInfo("+row.usid+")'>[删除]</a>";
 				}
 	        }
 	    ]],
