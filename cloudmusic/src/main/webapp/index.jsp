@@ -10,7 +10,7 @@
 <meta name="keywords"
 	content="网易云音乐，音乐，播放器，网易，下载，播放，DJ，免费，明星，精选，歌单，识别音乐，收藏，分享音乐，音乐互动，高音质" />
 <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
-<script type="text/javascript" src="js/login.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <link rel="stylesheet" type="text/css" href="css/main.css" />
 <link rel="stylesheet" type="text/css" href="css/denglu.css"/>
@@ -826,7 +826,7 @@
 				<div class="login-input">
 					<label>登录密码：</label> <input type="password" placeholder="请输入登录密码"
 						name="info[password]" id="password" class="list-input" />
-					<a href="" style="height:35px;line-height:35px;margin-left:20px;color:#666;" onclick="checkUname()">忘记密码?</a>
+					<a href="javascript:checkUname();" style="height:35px;line-height:35px;margin-left:20px;color:#666;">忘记密码?</a>
 				</div>
 			</div>
 			

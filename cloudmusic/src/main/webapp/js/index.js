@@ -65,7 +65,7 @@ $(function () {
     
     $.post("findAll",null,function(data){
     	$.each(data,function(index,row){
-    		unames+=row.uname;
+    		unames+=row.uname+",";
     	});
     },"json");
 });
@@ -104,10 +104,15 @@ function userReg(){
 
 function checkUname(){
 	var uname=$.trim( $("#username").val() );
-	if(uname==null){
+	if(uname.length==0){
 		alert("请输入用户名...");
-	}else if(!unames.contrains(uname)){
-		
+	}else if(unames.indexOf(uname+",")==-1){
+		alert("该用户不存在...");
+	}else{
+		$("#alertPwdWindow").css("display","block");
+    	$("#loginWindow").css("display","none");
+    	var uname = $("#username").val();
+    	$("#alertPwd_uname").val(uname);
 	}
 }
 
@@ -125,9 +130,8 @@ function alertPwd(){
 		data=parseInt(data);
 		if(data>0){
 			alert("修改成功...");
-			$("#reg_uname").val("");
-			$("#reg_pwd").val("");
-			$("#reg_pwd1").val("");
+			$("#alertPwd_pwd").val("");
+			$("#alertPwd_pwd1").val("");
 		}else{
 			alert("修改失败...");
 		}

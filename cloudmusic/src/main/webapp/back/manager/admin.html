@@ -103,7 +103,7 @@ li{
 	
 	function admin_delete(){
 		var rows=adminObj.datagrid("getChecked");
-		if(rows.length<0){
+		if(rows.length<=0){
 			$.messager.show({title:"温馨提示",msg:"请选择您要删除的数据...",timeout:2000,showType:"slide"});
 		}else{
 			$.messager.confirm("删除确认","您确定要删除选中的数据吗?",function(rt){
@@ -130,7 +130,7 @@ li{
 	
 	function admin_update_show(){
 		var rows=adminObj.datagrid("getChecked");
-		if(rows.length<0){
+		if(rows.length<=0){
 			$.messager.show({title:"温馨提示",msg:"请选择您要修改的数据...",timeout:2000,showType:"slide"});
 		}else if(rows.length>1){
 			$.messager.show({title:"温馨提示",msg:"只能选择一条数据进行修改...",timeout:2000,showType:"slide"});
